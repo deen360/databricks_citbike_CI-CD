@@ -82,16 +82,3 @@ Includes reusable Python modules, Databricks job/pipeline configs, and notebooks
   ```bash
   databricks bundle run
   ```
-
----
-
-## Contributing
-- Fork, create a feature branch, add tests, and open a PR.
-- Follow repository style (black/flake8) and ensure CI passes.
-
----
-
-## License & contact
-- Add your license details here (e.g., MIT).
-- Contact: add maintainer email or GitHub handle.
-
