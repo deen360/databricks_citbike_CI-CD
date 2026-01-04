@@ -1,0 +1,94 @@
+resources:
+  jobs:
+    citibike_etl_pipeline_nb:
+      name: citibike_etl_pipeline_nb
+      tasks:
+        - task_key: 00_whl_upload
+          python_wheel_task:
+            package_name: dab_project #has to be the same as the name in the setup.py python file
+            entry_point: main #entry point in the python wheel found in setup.py
+          environment_key: citibike_task_environment #we will be installing the wheel in this environment       
+        - task_key: 01_bronze_citibike
+          depends_on:
+            - task_key: 00_whl_upload
+          notebook_task:
+            notebook_path: ../citibike_etl/notebooks/01_bronze/01_bronze_citibike.ipynb
+            base_parameters:
+              pipeline_id: "{{job.id}}"
+              run_id: "{{job.run_id}}"
+              task_id: "{{job.run_id}}{{task.run_id}}"
+              processed_timestamp: "{{job.start_time.iso_datetime}}"
+              catalog: "${var.catalog}"
+            source: WORKSPACE
+          environment_key: citibike_task_environment
+          # job_cluster_key: Ds3_v2_sn_serverless (this is commented out to demonstrate the use of a job cluster)
+          #existing_cluster_id: "${var.all_purpose_cluster_id}" {#this is to demonstrate how to use an existing interactive cluster in a job task}
+        - task_key: 02_silver_citibike
+          depends_on:
+            - task_key: 01_bronze_citibike
+          notebook_task:
+            notebook_path: ../citibike_etl/notebooks/02_silver/02_silver_citibike.ipynb
+            base_parameters:
+              pipeline_id: "{{job.id}}"
+              run_id: "{{job.run_id}}"
+              task_id: "{{job.run_id}}{{task.run_id}}"
+              processed_timestamp: "{{job.start_time.iso_datetime}}"
+              catalog: "${var.catalog}"
+            source: WORKSPACE
+          environment_key: citibike_task_environment 
+          # job_cluster_key: Ds3_v2_sn_serverless
+        - task_key: 03_gold_citibike_daily_ride_summary
+          depends_on:
+            - task_key: 02_silver_citibike
+          notebook_task:
+            notebook_path: ../citibike_etl/notebooks/03_gold/03_gold_citibike_daily_ride_summary.ipynb
+            base_parameters:
+              catalog: "${var.catalog}"
+            source: WORKSPACE
+          environment_key: citibike_task_environment
+          # job_cluster_key: Ds3_v2_sn_serverless
+        - task_key: 03_gold_citibike_daily_station_performance
+          depends_on:
+            - task_key: 02_silver_citibike
+          notebook_task:
+            notebook_path: ../citibike_etl/notebooks/03_gold/03_gold_citibike_daily_station_performance.ipynb
+            base_parameters:
+              catalog: "${var.catalog}"
+            source: WORKSPACE
+          environment_key: citibike_task_environment 
+          #here we are demonstrating the use of a common cluster configuration defined in resources/cluster.yml
+          #and also using complex variable substitution to avoid repeating the same cluster config in multiple places
+      #job_clusters:
+      #  - job_cluster_key: Ds3_v2_sn_serverless
+      #    new_cluster: "${var.Ds3_v2_sn_serverless}"
+
+      queue:
+        enabled: true
+      #performance_target: PERFORMANCE_OPTIMIZED
+      environments:
+        - environment_key: Default
+          spec:
+            environment_version: "4"
+        - environment_key: citibike_task_environment
+          spec:
+            dependencies:
+              - ../dist/*.whl #to include the latest built wheel file in the dist folder
+            environment_version: "4"
+      performance_target: PERFORMANCE_OPTIMIZED
+
+
+
+
+
+
+#to run it with job clusters #uncomment the job_clusters section and the job_cluster_key lines in each task
+#to run it with serverless clusters using environments #uncomment the environments section and the environment_key lines in each task
+
+
+#we removed the dependencies in the environment section because we are installing the wheel in the first task 00_whl_upload
+
+
+#in order to use python wheel, we remove the libraries section in each task and add the dependencies section under the citibike_task_environment environment
+#but to use python wheel without environments ass task as the first part of the jobs 
+#we create a task first to install the python wheels and the since its pre installed it will be used in the rest of the pipeline*
+#so we create a task called 00_wheel upload

@@ -1,0 +1,24 @@
+resources:
+  pipelines:
+    pipeline_citibike_etl_pipeline:
+        name: citibike_etl_pipeline
+        configuration:
+          catalog: "${var.catalog}"
+        libraries:
+          - notebook:
+              path: ../citibike_etl/dlt/01_bronze/01_bronze_citibike.ipynb
+          - notebook:
+              path: ../citibike_etl/dlt/02_silver/02_silver_citibike.ipynb
+          - notebook:
+              path: ../citibike_etl/dlt/03_gold/03_gold_citibike_daily_ride_summary.ipynb
+          - notebook:
+              path: ../citibike_etl/dlt/03_gold/03_gold_citibike_daily_station_performance.ipynb
+        schema: default
+        #continuous: false
+        development: "${var.dev_flag}" #uses the dev_flag variable from databricks.yml to set development mode
+        photon: true
+        catalog: "${var.catalog}" #can be overridden in databricks.yml per environment
+        serverless: true
+
+#here we arre creating a databricks delta live table pipeline resource that references the notebooks in the citibike_etl/dlt folder
+#and uses the catalog and development mode variables defined in databricks.yml

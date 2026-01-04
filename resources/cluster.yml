@@ -1,0 +1,23 @@
+variables:
+  #all_purpose_cluster_id:
+  #  lookup:
+  #    cluster: "yusuf.kamorudeen@devoteam.com's Cluster 2025-12-06 19:00:23"
+  Ds3_v2_sn_serverless:
+    type: "complex"
+    default:
+      cluster_name: ""
+      spark_version: 15.4.x-scala2.12
+      node_type_id: Standard_D3_v2
+      autoscale:
+        min_workers: 2
+        max_workers: 8
+      spark_conf:
+        "spark.databricks.cluster.profile": "serverless"
+        "spark.databricks.repl.allowedLanguages": "python,sql"
+      spark_env_vars:
+        PYSPARK_PYTHON: /databricks/python3/bin/python3
+      data_security_mode: DATA_SECURITY_MODE_DEDICATED
+      runtime_engine: STANDARD
+      kind: CLASSIC_PREVIEW
+#this is to define a complex variable for cluster configuration instead of having to repeat the same config in multiple places in resources (citibike_etl_pipeline_nb.job.yml)
+#the all_purpose_cluster_id:show how to lookup an existing interactive cluster by name to use in jobs or notebooks

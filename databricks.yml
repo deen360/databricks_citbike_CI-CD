@@ -1,0 +1,98 @@
+# This is a Databricks asset bundle definition for dab_project.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: dab_project
+  uuid: b1991047-0696-4779-bbd9-9aec0760ddab
+
+# Include all resource definition files in the resources/ directory and its subdirectories.
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+
+
+
+# Variable declarations. These variables are assigned in the dev/prod targets below.
+variables:
+  catalog:
+    default: "citibike_free"
+    description: The catalog to use
+  #schema:
+  #  description: The schema to use
+  dev_flag:
+    default: "true"
+    description: Flag to indicate whether the deployment is for development or production used in #used in citibike-etl_pipeline.dlt.yml line 18
+
+
+targets:
+  dev:
+    # The default target uses 'mode: development' to create a development copy.
+    # - Deployed resources get prefixed with '[dev my_user_name]'
+    # - Any job schedules and triggers are paused by default.
+    # See also https://docs.databricks.com/dev-tools/bundles/deployment-modes.html.
+    mode: development 
+    default: true
+    
+    workspace:
+      host: https://dbc-6c4db926-6564.cloud.databricks.com # Replace with your Databricks workspace URL
+
+    #variables:
+    #  catalog: dbw_dev_france_1168201792318680
+    #  schema: dev
+    #presets:
+    #  artifacts_dynamic_version: true
+
+  
+    # The default target uses 'mode: development' to create a development copy.
+    # - Deployed resources get prefixed with '[dev my_user_name]'
+    # - Any job schedules and triggers are paused by default.
+    # See also https://docs.databricks.com/dev-tools/bundles/deployment-modes.html.
+
+
+
+
+
+
+    #variables:
+    #  catalog: dbw_dev_france_1168201792318680
+    #  schema: dev
+    #presets:
+    #  artifacts_dynamic_version: true
+
+  
+  test:
+    mode: production
+
+    presets:
+      name_prefix: '[testing] '
+
+    workspace:
+      host: https://adb-946647172827787.7.azuredatabricks.net/
+      #folder to deploy the bundle to in databricks workspace
+      root_path: /Workspace/Shared/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      catalog: "citibike_test" #helps to override catalog variable in deployment environments
+
+      dev_flag:
+        default: "false"
+        description: Flag to indicate whether the deployment is for development or production used in #used in citibike-etl
+
+    permissions:
+      - user_name: yusuf.kamorudeen@devoteam.com
+        level: CAN_MANAGE
+
+
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-4194007208789787.7.azuredatabricks.net
+      # folder to deploy to in databricks workspace
+      root_path: /Workspace/Shared/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      catalog: "citibike_prod"
+      dev_flag:
+        default: "false"
+        description: Flag to indicate whether the deployment is for development or production used in #used in citibike-etl
+    #  schema: prod
+    permissions:
+      - user_name: yusuf.kamorudeen@devoteam.com
+        level: CAN_MANAGE
