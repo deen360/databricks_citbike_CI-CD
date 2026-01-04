@@ -37,7 +37,7 @@ jobs:
       # Step 4: Run tests, generate coverage report and HTML test report
       - name: Run pytest & generate HTML report
         run: |
-          pytest \
+          pytest tests/ \
             --disable-warnings \
             --cov=./src \                                # Measure coverage for ./src
             --cov-report=html \                          # Output coverage HTML in htmlcov/
