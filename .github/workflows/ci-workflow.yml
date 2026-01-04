@@ -1,8 +1,5 @@
 name: CI Workflow
 
-# Trigger workflow on:
-# - Pushes to any branch under feature/**
-# - Pull requests targeting main
 on:
   push:
     branches:
@@ -14,40 +11,37 @@ on:
 jobs:
   ci_job:
     name: CI Job
-    runs-on: ubuntu-latest  # Use latest Ubuntu runner
+    runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out repository files
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Set up the required Python version
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # Step 3: Install dependencies and pytest-html plugin
-      - name: Install dependencies + pytest-html
-      run: |
-        python -m pip install --upgrade pip            # Upgrade pip
-        pip install -r requirements-pyspark.txt        # Install project dependencies
-        pip install pytest-html pytest-cov             # Install test reporting plugins
+      - name: Install dependencies and pytest-html
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-pyspark.txt
+          pip install pytest-html pytest-cov
 
-    # Step 4: Run tests, generate coverage report and HTML test report
-    - name: Run pytest & generate HTML report
-      run: |
-        pytest tests/ \
-          --disable-warnings \
-          --cov=./src \
-          --cov-report=html \
-          --html=pytest_report.html \
-          --self-contained-html
+      - name: List files for debugging
+        run: ls -R
 
-      # Step 5: Upload coverage HTML report as an artifact
-      # This allows you to download the htmlcov/ folder from the Actions UI
+      - name: Run pytest and generate HTML report
+        run: |
+          pytest tests/ \
+            --disable-warnings \
+            --cov=./src \
+            --cov-report=html \
+            --html=pytest_report.html \
+            --self-contained-html
+
       - name: Upload coverage HTML report
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-html                            # Artifact name
-          path: htmlcov                                   # Folder containing HTML coverage output
+          name: coverage-html
+          path: htmlcov
