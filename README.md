@@ -1,4 +1,4 @@
-# dab_project
+# databricks_citbike_CI-CD project
 
 **A Databricks project for Citibike ETL pipelines and utilities.**  
 Includes reusable Python modules, Databricks job/pipeline configs, and notebooks for bronze/silver/gold ETL layers.
