@@ -6,8 +6,8 @@ Includes reusable Python modules, Databricks job/pipeline configs, and notebooks
 > 🔧 Quick summary: Source code lives in `src/`; Databricks job/pipeline configs in `resources/`; unit tests in `tests/`.
 
 ### Badges
-- Build: `![CI](https://github.com/<OWNER>/<REPO>/actions/workflows/ci-workflow.yml/badge.svg)`
-- Coverage: `![Coverage](https://img.shields.io/codecov/c/github/<OWNER>/<REPO>.svg)`
+- Build: `![CI](https://github.com/deen360/databricks_citbike_CI-CD/actions/workflows/ci-workflow.yml/badge.svg)`
+- Coverage: `![Coverage](https://img.shields.io/codecov/c/github/deen360/databricks_citbike_CI-CD.svg)`
 
 (Replace `<OWNER>/<REPO>` with the GitHub owner and repo name to enable badges.)
 
