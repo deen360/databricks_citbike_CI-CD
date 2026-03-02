@@ -17,11 +17,6 @@ packaged and deployed with Databricks bundles, so you can manage jobs and
 pipelines consistently across environments.
 
 
-### Badges
-- Build: `![CI](https://github.com/deen360/databricks_citbike_CI-CD/actions/workflows/ci-workflow.yml/badge.svg)`
-- Coverage: `![Coverage](https://img.shields.io/codecov/c/github/deen360/databricks_citbike_CI-CD.svg)`
-
-(Replace `<OWNER>/<REPO>` with the GitHub owner and repo name to enable badges.)
 
 ---
 
@@ -107,9 +102,6 @@ pip install -r requirements-pyspark.txt
 pip list
 deactivate
 ```
-
-(see earlier section for macOS/Linux instructions if needed)
-
 ---
 
 ## Getting started
@@ -129,7 +121,7 @@ provide the necessary dependencies.
 
 ---
 
-## Development & testing 🧪
+## Development & testing 
 - Run unit tests:
   ```bash
   uv run pytest
