@@ -48,10 +48,6 @@ targets:
     # See also https://docs.databricks.com/dev-tools/bundles/deployment-modes.html.
 
 
-
-
-
-
     #variables:
     #  catalog: dbw_dev_france_1168201792318680
     #  schema: dev
@@ -63,7 +59,7 @@ targets:
     mode: production
 
     presets:
-      name_prefix: '[testing] '
+      name_prefix: '[testing]'
 
     workspace:
       host: https://adb-946647172827787.7.azuredatabricks.net/
